@@ -1,0 +1,56 @@
+@startuml
+!theme plain
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+
+entity "User" as user {
+  * id : INT <<PK>>
+  --
+  * name : VARCHAR(100)
+  * email : VARCHAR(100) <<UK>>
+  * role : VARCHAR(20) <<student, teacher>>
+  created_at : TIMESTAMP
+}
+
+entity "Course" as course {
+  * id : INT <<PK>>
+  --
+  * title : VARCHAR(200)
+  description : TEXT
+  * teacher_id : INT <<FK>>
+  created_at : TIMESTAMP
+}
+
+entity "Module" as module {
+  * id : INT <<PK>>
+  --
+  * title : VARCHAR(200)
+  * order_num : INT
+  * course_id : INT <<FK>>
+}
+
+entity "Lesson" as lesson {
+  * id : INT <<PK>>
+  --
+  * title : VARCHAR(200)
+  * type : VARCHAR(20) <<video, article, quiz>>
+  content_url : VARCHAR(500)
+  * order_num : INT
+  * module_id : INT <<FK>>
+}
+
+entity "Enrollment" as enrollment {
+  * id : INT <<PK>>
+  --
+  * student_id : INT <<FK>>
+  * course_id : INT <<FK>>
+  progress : DECIMAL(5,2)
+  enrolled_at : TIMESTAMP
+}
+
+user ||--o{ course : "преподает"
+user ||--o{ enrollment : "обучается"
+course ||--o{ module : "состоит из"
+module ||--o{ lesson : "содержит"
+course ||--o{ enrollment : "записан"
+@enduml
